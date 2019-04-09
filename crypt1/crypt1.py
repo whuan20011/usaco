@@ -16,8 +16,8 @@ def solution():
     recursive(arr, prefix, digits)
     res = 0
     for d in digits:
-        digits_3 = d[0: 3]
-        digits_2 = d[3: ]
+        digits_3 = d[:3]
+        digits_2 = d[3:]
         first = str_num(digits_3)
         second = str_num(digits_2)
         product1 = first * int(d[-1])
