@@ -7,38 +7,36 @@ def solution():
     fin = open("wormhole.in", "r")
     fout = open("wormhole.out", "w")
     N = int(fin.readline().strip())
-    ori = []
-    i = 0
+    points = []
     for l in fin.readlines():
         x, y = map(int, l.strip().split())
-        i += 1
-        ori.append((x, y))
-    ori = sorted(ori, key = lambda x: (x[1], x[0]))
+        points.append((x, y))
+    points = sorted(points, key = lambda x: (x[1], x[0]))
     right = {}
-    for h in range(len(ori) - 1):
-        if ori[h][1] == ori[h + 1][1]:
-            right[ori[h]] = ori[h + 1]
+    for h in range(len(points) - 1):
+        if points[h][1] == points[h + 1][1]:
+            right[points[h]] = points[h + 1]
     pairs = []
-    permutation(ori, {}, pairs)
+    pair_wormholes(points, {}, pairs)
     res = 0
     for pair in pairs:
-        if circle(pair, right):
+        if has_circle(pair, right):
             res += 1
     print >>fout, res 
-def permutation(ori, prefix, pairs):
-    if len(prefix) == len(ori):
+def pair_wormholes(points, prefix, pairs):
+    if len(prefix) == len(points):
         pairs.append(prefix)
         return
-    for j in range(len(ori)):
-        if ori[j] not in prefix:
+    for first in range(len(points)):
+        if points[first] not in prefix:
             break
-    for k in range(j + 1, len(ori)):
-        if ori[k] not in prefix:
+    for second in range(first + 1, len(points)):
+        if points[second] not in prefix:
             new_prefix = prefix.copy()        
-            new_prefix[ori[j]] = ori[k]
-            new_prefix[ori[k]] = ori[j]
-            permutation(ori, new_prefix, pairs)        
-def circle(pair, right):
+            new_prefix[points[first]] = points[second]
+            new_prefix[points[second]] = points[first]
+            pair_wormholes(points, new_prefix, pairs)        
+def has_circle(pair, right):
     for p in pair:
         path = {}
         tag = 0
