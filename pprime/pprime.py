@@ -23,24 +23,12 @@ def solution():
     for r in res:
         print >>fout, r
 def creat_palindrome(num, a, b):
-    digits = []
-    while num != 0:
-        w = num % 10
-        num /= 10
-        digits.append(w)
-    rdigits = list(reversed(digits))
-    new_digits = rdigits + digits
-    new_num1 = 0
-    for p in new_digits:
-        new_num1 = new_num1 * 10 + p
     arr = []
+    new_num1 = int(str(num) + str(num)[::-1])
     if new_num1 >= a and new_num1 <= b:
         arr.append(new_num1)
     for m in range(0, 10):
-        brr = rdigits + [m] + digits
-        new_num2 = 0
-        for q in brr:
-            new_num2 = new_num2 * 10 + q
+        new_num2 = int(str(num) + str(m) + str(num)[::-1])
         if new_num2 >= a and new_num2 <= b:
             arr.append(new_num2)
     return arr
