@@ -11,7 +11,7 @@ def queen8(num, board):
         row = 8 - num
         for col in range(0, 8):
             if can_put_queen(row, col, board):
-                new_board = copy.deepcopy(board)
+                new_board = copy.deepcopy(board)hh
                 new_board[row][col] = 1
                 queen8(num - 1, new_board)
 def can_put_queen(row, col, board):
