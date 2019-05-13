@@ -29,7 +29,8 @@ def solution():
                 while queue:
                     idx = queue.pop()
                     visited.add(idx)
-                    neighboors = find_neighboors(idx, floorplan)
+                    val = floorplan[idx[0]][idx[1]]
+                    neighboors = find_neighboors(idx, val)
                     for nei in neighboors:
                         if nei not in visited:
                             queue.append(nei)
@@ -39,61 +40,48 @@ def solution():
                 for v in visited:
                     maps[v[0]][v[1]] = room
     bigger_size, cancel_wall = creat_biggersize(maps, m, n, room_size)
-    west = n
-    south = 0
-    for wall in cancel_wall:
-        west = min(wall[1], west)
-    for wall in cancel_wall:
-        if wall[1] == west:
-            south = max(wall[0], south)
-    print >> fout, room
+    print bigger_size, cancel_wall
+    def west_south(a, b):
+        if a[1] < b[1]:
+            return 1
+        elif a[1] == b[1] and a[0] > b[0]:
+            return 1
+        elif a[1] == b[1] and a[0] == b[0]:
+            if a[2] == "N":
+                return 1
+        return -1
+    print >>fout, room
     print >>fout, biggest_size
-    print >>fout,  bigger_size
-    res = []
-    for wall in cancel_wall:
-        if wall[0] == south and wall[1] == west:
-            res.append(wall)
-    if len(res) == 1:
-        print >>fout, res[0][0], res[0][1], res[0][2]
-    else:
-        for r in res:
-            if r[2] == "N":
-                print>> fout, r[0], r[1], r[2]
+    print >>fout, bigger_size
+    res = sorted(cancel_wall, cmp=west_south)[-1]
+    print >>fout, res[0], res[1], res[2]
 def creat_biggersize(maps, m, n, room_size):
     bigger_size = 0
     cancel_wall = []
     for i in range(n):
         for j in range(m):
             cur = maps[i][j]
-            if j - 1 >= 0 and maps[i][j - 1] != cur:
-                if room_size[cur] + room_size[maps[i][j - 1]] > bigger_size:
-                    bigger_size = room_size[cur] + room_size[maps[i][j - 1]]
-                    cancel_wall = [[i + 1, j + 1, "W"]]
-                elif room_size[cur] + room_size[maps[i][j - 1]] == bigger_size:
-                    cancel_wall.append([i + 1, j + 1, "W"])
-            if i + 1 < n and maps[i + 1][j] != cur:
-                if room_size[cur] + room_size[maps[i + 1][j]] > bigger_size:
-                    bigger_size = room_size[cur] + room_size[maps[i + 1][j]]
-                    cancel_wall = [[i + 1, j + 1, "S"]]
-                elif room_size[cur] + room_size[maps[i + 1][j]] == bigger_size:
-                    cancel_wall.append([i + 1, j + 1, "S"])
-            if i - 1 >= 0 and maps[i - 1][j] != cur:
-                if room_size[cur] + room_size[maps[i - 1][j]] > bigger_size:
-                    bigger_size = room_size[cur] + room_size[maps[i - 1][j]]
-                    cancel_wall = [[i + 1, j + 1, "N"]]
-                elif room_size[cur] + room_size[maps[i - 1][j]] == bigger_size:
-                    cancel_wall.append([i + 1, j + 1, "N"])
-            if j + 1 < m and maps[i][j + 1] != cur:
-                if room_size[cur] + room_size[maps[i][j + 1]] > bigger_size:
-                    bigger_size = room_size[cur] + room_size[maps[i][j + 1]]
-                    cancel_wall = [[i + 1, j + 1, "E"]]
-                elif room_size[cur] + room_size[maps[i][j + 1]] == bigger_size:
-                    cancel_wall.append([i + 1, j + 1, "E"])
+            allneighboors = find_neighboors((i, j), 0)
+            for a, neighboor in enumerate(allneighboors):
+                #print a, neighboor
+                if neighboor[0] >= 0 and neighboor[0] < n and neighboor[1] >= 0 and neighboor[1] < m:
+                    if maps[neighboor[0]][neighboor[1]] != cur:
+                        if room_size[cur] + room_size[maps[neighboor[0]][neighboor[1]]] > bigger_size:
+                            bigger_size = room_size[cur] + room_size[maps[neighboor[0]][neighboor[1]]]
+                            cancel_wall = []
+                        if room_size[cur] + room_size[maps[neighboor[0]][neighboor[1]]] == bigger_size:
+                            if a == 0:
+                                cancel_wall.append([i + 1, j + 1, "W"])
+                            elif a == 1:
+                                cancel_wall.append([i + 1, j + 1, "N"])
+                            elif a == 2:
+                                cancel_wall.append([i + 1, j + 1, "E"])
+                            elif a == 3:
+                                cancel_wall.append([i + 1, j + 1, "S"])
     return bigger_size, cancel_wall
-def find_neighboors(idx, floorplan):
+def find_neighboors(idx, val):
     directions = []
     neighboors = []
-    val = floorplan[idx[0]][idx[1]]
     while val != 0:
         directions.append(val % 2)
         val = val / 2
