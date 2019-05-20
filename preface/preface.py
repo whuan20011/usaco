@@ -12,20 +12,9 @@ def solution():
     res = {}
     dic = {1:'I', 5:'V', 10:'X', 50:'L', 100:'C', 500:'D', 1000:'M'}
     roman_numerals(N, 1, dic, res)
-    if 'I' in res:
-        print >>fout, 'I', res['I']
-    if 'V' in res:
-        print >>fout, 'V', res['V']
-    if 'X' in res:
-        print >>fout, 'X', res['X']
-    if 'L' in res:
-        print >>fout, 'L', res['L']
-    if 'C' in res:
-        print >>fout, 'C', res['C']
-    if 'D' in res:
-        print >>fout, 'D', res['D']
-    if 'M' in res:
-        print >>fout, 'M', res['M']
+    for char in "IVXLCDM":
+        if char in res:
+            print >>fout, char, res[char]
 def roman_numerals(N, num, dic, res):
     if num > N:
         return
