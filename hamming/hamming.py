@@ -50,7 +50,7 @@ def recursive(N, B, D, num, res, resres):
         temp.extend(list(reversed(bin)))
         tag = 0
         for r in res:
-            if not hamming(D, temp, r):
+            if hamming(D, temp, r) < D:
                 tag = 1
                 break
         if tag == 0:
@@ -62,9 +62,6 @@ def hamming(D, temp, r):
     for i in range(len(r)):
         if temp[i] != r[i]:
             diff += 1
-    if diff >= D:
-        return True
-    else:
-        return False
+    return diff
 if __name__ == "__main__":
     solution()
