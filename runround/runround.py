@@ -3,7 +3,6 @@ ID: whuan2001
 LANG: PYTHON2
 TASK: runround
 """
-point = 0
 def solution():
     global point
     fin = open("runround.in", "r")
@@ -31,11 +30,10 @@ def solution():
         if tag == 1:
             continue
         digits = list(reversed(digits))
-        if is_runround(digits, dic):
+        if is_runround(digits, dic, 0):
             print >>fout, res
             break
-def is_runround(arr, dic):
-    global point
+def is_runround(arr, dic, point):
     if point not in dic:
         dic[point] = True
     else:
@@ -43,8 +41,6 @@ def is_runround(arr, dic):
             return True
         else:
             return False
-    point += arr[point] % len(arr)
-    point = point % len(arr)
-    return is_runround(arr, dic)
+    return is_runround(arr, dic, (point + arr[point] % len(arr)) % len(arr))
 if __name__ == "__main__":
     solution()
