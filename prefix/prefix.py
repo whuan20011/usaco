@@ -27,7 +27,6 @@ def dfs(S, primitives, longest_pri, idx, dic):
         return dic[idx]
     if idx == len(S):
         return 0
-    tag = 0
     temp = []
     for point in range(idx + 1, idx + longest_pri + 1):
         if point > len(S):
@@ -35,14 +34,10 @@ def dfs(S, primitives, longest_pri, idx, dic):
         if S[idx:point] in primitives:
             tag = 1
             temp.append(point - idx + dfs(S, primitives, longest_pri, idx + point - idx, dic))
-    if tag == 1:
-        rest_longest = 0
-        for t in temp:
-            rest_longest = max(rest_longest, t)
-        dic[idx] = rest_longest
-        return rest_longest
-    if tag == 0:
-        dic[idx] = 0
-        return 0
+    rest_longest = 0
+    for t in temp:
+        rest_longest = max(rest_longest, t)
+    dic[idx] = rest_longest
+    return rest_longest
 if __name__ == "__main__":
     solution()
