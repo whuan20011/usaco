@@ -21,14 +21,7 @@ def solution():
         lamps_state = [1] * N
         for i in range(4):
             if button[i] == 1:
-                if i == 0:
-                    button1(N, lamps_state)
-                if i == 1:
-                    button2(N, lamps_state)
-                if i == 2:
-                    button3(N, lamps_state)
-                if i == 3:
-                    button4(N, lamps_state)
+                button_to_change(N, lamps_state, i)
         if is_satisfy(on_lamps, off_lamps, lamps_state):
             res.append(lamps_state)
     if not res:
@@ -53,50 +46,25 @@ def dfs(C, temp, button_counts):
         temp.append(i)
         dfs(C - i, temp, button_counts)
         temp.pop()
-def button1(N, lamps_state):
-    for j in range(N):
-        if lamps_state[j] == 0:
-            lamps_state[j] = 1
+def button_to_change(N, lamps_state, i):
+    button_start_tolerance = [(0, 1), (0, 2), (1, 2), (0, 3)]
+    start = button_start_tolerance[i][0]
+    tolerance = button_start_tolerance[i][1]
+    while start < N:
+        if lamps_state[start] == 0:
+            lamps_state[start] = 1
         else:
-            lamps_state[j] = 0
-    return lamps_state
-def button2(N, lamps_state):
-    for j in range(N):
-        if j % 2 == 0:
-            if lamps_state[j] == 0:
-                lamps_state[j] = 1
-            else:
-                lamps_state[j] = 0
-    return lamps_state
-def button3(N, lamps_state):
-    for j in range(N):
-        if j % 2 == 1:
-            if lamps_state[j] == 0:
-                lamps_state[j] = 1
-            else:
-                lamps_state[j] = 0
-    return lamps_state
-def button4(N, lamps_state):
-    for j in range(N):
-        if j % 3 == 0:
-            if lamps_state[j] == 0:
-                lamps_state[j] = 1
-            else:
-                lamps_state[j] = 0
+            lamps_state[start] = 0
+        start += tolerance
     return lamps_state
 def is_satisfy(on_lamps, off_lamps, lamps_state):
-    tag = 0
     for p in on_lamps:
         if lamps_state[p - 1] == 0:
-            tag = 1
             return False
-    if tag == 0:
-        for q in off_lamps:
-            if lamps_state[q - 1] == 1:
-                tag = 1
-                return False
-        if tag == 0:
-            return True
+    for q in off_lamps:
+        if lamps_state[q - 1] == 1:
+            return False
+    return True
 if __name__ == "__main__":
     solution()
                 
