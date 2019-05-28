@@ -3,39 +3,29 @@ ID: whuan2001
 LANG: PYTHON2
 TASK: nocows
 """
+import math
 def solution():
     fin = open("nocows.in", "r")
+    fout = open("nocows.out", "w")
     N, K = map(int, fin.readline().strip().split())
-    nodes = []
-    height = 2
-    pedigrees = 1
-    res = []
-    dfs(N, K, height, nodes, pedigrees, res)
-    print sum(res)
-def dfs(N, K, height, nodes, pedigrees, res):
-    if height == 2:
-        nodes.append(1)
-        nodes.append(2)
-        dfs(N, K, height + 1, nodes, pedigrees, res)
-    if height > 2 and height < K:
-        for i in range(1, nodes[-1]):
-            nodes.append(2 * i)
-            pedigrees *= combination(nodes[-1], i)
-            dfs(N, K, height + 1, nodes, pedigrees, res)
-            nodes.pop()
-            pedigrees /= combination(nodes[-1], i)
-    if height == K:
-        if (N - sum(nodes)) >= 2 and (N - sum(nodes)) <= nodes[-1] * 2:
-            nodes.append(N - sum(nodes))
-            pedigrees *= combination(nodes[-1], (N - sum(nodes) / 2)
-            res.append(pedigrees)
-            return
-        else:
-            return
-def combination(x, y):
-    
-
-            
-            
-            
-        
+    dic = {}
+    print >>fout, (dfs(N, K, N, K, dic) - dfs(N, K, N, K - 1, dic) + 9901) % 9901
+def dfs(N, K, nodes, height, dic):
+    if (nodes, height) in dic:
+        return dic[(nodes, height)]
+    if height == 1 and nodes != 1:
+        return 0
+    if nodes == 1:
+        return 1
+    if nodes == 3 and height > 1:
+        return 1
+    pedigrees = []
+    for nodes_left in range(1, nodes - 1):
+        nodes_right = nodes - 1 - nodes_left
+        cur_pedigrees = dfs(N, K, nodes_left, height - 1, dic)
+        cur_pedigrees *= dfs(N, K, nodes_right, height - 1, dic)
+        pedigrees.append(cur_pedigrees)
+    dic[(nodes, height)] = sum(pedigrees) % 9901
+    return dic[(nodes, height)]
+if __name__ == "__main__":
+    solution()
