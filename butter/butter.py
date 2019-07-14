@@ -24,13 +24,11 @@ def solution():
     for pasture in range(1, P + 1):
         pasture_dis = dijkstra(P, dic, pasture)
         cur_dis = 0
-        for cow in range(N):
-            cow_grazing = cow_in_pasture[cow]
+        for cow_grazing in cow_in_pasture:
             cur_dis += pasture_dis[cow_grazing]
         minimum_dis = min(minimum_dis, cur_dis)
     print >>fout, minimum_dis
 def dijkstra(P, dic, src):
-    dic[src][src] = 0
     visited = set()
     src_dis = {src: 0}
     heap = []
